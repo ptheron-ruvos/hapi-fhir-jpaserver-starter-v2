@@ -58,6 +58,7 @@ public class HapiProperties {
     static final String ALLOW_CONTAINS_SEARCHES = "allow_contains_searches";
     static final String ALLOW_OVERRIDE_DEFAULT_SEARCH_PARAMS = "allow_override_default_search_params";
     static final String EMAIL_FROM = "email.from";
+    static final String EMAIL_DEFAULT_SUBJECT = "email.defaultSubject";
     private static final String VALIDATE_REQUESTS_ENABLED = "validation.requests.enabled";
     private static final String VALIDATE_RESPONSES_ENABLED = "validation.responses.enabled";
     private static final String FILTER_SEARCH_ENABLED = "filter_search.enabled";
@@ -342,6 +343,8 @@ public class HapiProperties {
     public static Boolean getEmailEnabled() {
         return HapiProperties.getBooleanProperty("email.enabled", false);
     }
+
+    public static String getEmailDefaultSubject() { return HapiProperties.getProperty(EMAIL_DEFAULT_SUBJECT, "HAPI FHIR Starter Notifications"); }
 
     public static String getEmailHost() {
         return HapiProperties.getProperty("email.host");

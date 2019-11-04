@@ -4,7 +4,7 @@ import ca.uhn.fhir.jpa.binstore.DatabaseBlobBinaryStorageSvcImpl;
 import ca.uhn.fhir.jpa.binstore.IBinaryStorageSvc;
 import ca.uhn.fhir.jpa.dao.DaoConfig;
 import ca.uhn.fhir.jpa.model.entity.ModelConfig;
-import ca.uhn.fhir.jpa.subscription.module.cache.SubscriptionDeliveryHandlerFactory;
+import ca.uhn.fhir.jpa.subscription.module.channel.SubscriptionDeliveryHandlerFactory;
 import ca.uhn.fhir.jpa.subscription.module.subscriber.email.IEmailSender;
 import ca.uhn.fhir.jpa.subscription.module.subscriber.email.JavaMailEmailSender;
 import org.apache.commons.dbcp2.BasicDataSource;
@@ -41,6 +41,7 @@ public class FhirServerConfigCommon {
     private Boolean subscriptionEmailEnabled = HapiProperties.getSubscriptionEmailEnabled();
     private Boolean allowOverrideDefaultSearchParams = HapiProperties.getAllowOverrideDefaultSearchParams();
     private String emailFrom = HapiProperties.getEmailFrom();
+    private String emailDefaultSubject = HapiProperties.getEmailDefaultSubject();
     private Boolean emailEnabled = HapiProperties.getEmailEnabled();
     private String emailHost = HapiProperties.getEmailHost();
     private Integer emailPort = HapiProperties.getEmailPort();
@@ -59,7 +60,7 @@ public class FhirServerConfigCommon {
 
         if (this.emailEnabled) {
             ourLog.info("Server is configured to enable email with host '" + this.emailHost + "' and port " + this.emailPort.toString());
-            ourLog.info("Server will use '" + this.emailFrom + "' as the from email address");
+            ourLog.info("Server will use '" + this.emailFrom + "' as the from email address and '" + this.emailDefaultSubject + "' as the default email subject.");
 
             if (this.emailUsername != null && this.emailUsername.length() > 0) {
                 ourLog.info("Server is configured to use username '" + this.emailUsername + "' for email");
@@ -96,6 +97,7 @@ public class FhirServerConfigCommon {
         retVal.setExpungeEnabled(this.expungeEnabled);
         retVal.setAutoCreatePlaceholderReferenceTargets(this.allowPlaceholderReferences);
         retVal.setEmailFromAddress(this.emailFrom);
+        retVal.setEmailDefaultSubject(this.emailDefaultSubject);
 
         Integer maxFetchSize = HapiProperties.getMaximumFetchSize();
         retVal.setFetchSizeDefaultMaximum(maxFetchSize);
@@ -131,6 +133,7 @@ public class FhirServerConfigCommon {
         modelConfig.setAllowExternalReferences(this.allowExternalReferences);
         modelConfig.setDefaultSearchParamsCanBeOverridden(this.allowOverrideDefaultSearchParams);
         modelConfig.setEmailFromAddress(this.emailFrom);
+        modelConfig.setEmailDefaultSubject(this.emailDefaultSubject);
 
         // You can enable these if you want to support Subscriptions from your server
         if (this.subscriptionRestHookEnabled) {
@@ -180,7 +183,6 @@ public class FhirServerConfigCommon {
 
             Validate.notNull(mySubscriptionDeliveryHandlerFactory, "No subscription delivery handler");
             mySubscriptionDeliveryHandlerFactory.setEmailSender(retVal);
-
 
             return retVal;
         }

@@ -17,6 +17,7 @@ import ca.uhn.fhir.jpa.provider.r4.JpaSystemProviderR4;
 import ca.uhn.fhir.jpa.provider.r5.JpaConformanceProviderR5;
 import ca.uhn.fhir.jpa.provider.r5.JpaSystemProviderR5;
 import ca.uhn.fhir.jpa.search.DatabaseBackedPagingProvider;
+import ca.uhn.fhir.jpa.starter.interceptors.EmbeddedEmailBodyInterceptor;
 import ca.uhn.fhir.jpa.subscription.SubscriptionInterceptorLoader;
 import ca.uhn.fhir.jpa.subscription.module.interceptor.SubscriptionDebugLogInterceptor;
 import ca.uhn.fhir.jpa.util.ResourceProviderFactory;
@@ -165,8 +166,14 @@ public class JpaRestfulServer extends RestfulServer {
      * browser.
      */
     ResponseHighlighterInterceptor responseHighlighterInterceptor = new ResponseHighlighterInterceptor();
-    ;
     this.registerInterceptor(responseHighlighterInterceptor);
+
+    /*
+     * This interceptor sets the body of notification email to a specific value
+     * if there is an extension on the resource that triggered the subscription.
+     */
+    EmbeddedEmailBodyInterceptor embeddedEmailBodyInterceptor = new EmbeddedEmailBodyInterceptor();
+    this.registerInterceptor(embeddedEmailBodyInterceptor);
 
     /*
      * Add some logging for each request

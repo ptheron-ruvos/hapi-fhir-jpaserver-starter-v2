@@ -33,6 +33,7 @@ import java.util.TreeSet;
 import org.hl7.fhir.dstu3.model.Bundle;
 import org.hl7.fhir.r4.model.Bundle.BundleType;
 import org.hl7.fhir.dstu3.model.Meta;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.cors.CorsConfiguration;
@@ -57,6 +58,8 @@ public class JpaRestfulServer extends RestfulServer {
      */
     ApplicationContext appCtx = (ApplicationContext) getServletContext()
         .getAttribute("org.springframework.web.context.WebApplicationContext.ROOT");
+    IInterceptorService interceptorService = appCtx.getBean(IInterceptorService.class);
+
     // Customize supported resource types
     Set<String> supportedResourceTypes = HapiProperties.getSupportedResourceTypes();
     if (!supportedResourceTypes.isEmpty()) {
@@ -172,8 +175,7 @@ public class JpaRestfulServer extends RestfulServer {
      * This interceptor sets the body of notification email to a specific value
      * if there is an extension on the resource that triggered the subscription.
      */
-    EmbeddedEmailBodyInterceptor embeddedEmailBodyInterceptor = new EmbeddedEmailBodyInterceptor();
-    this.registerInterceptor(embeddedEmailBodyInterceptor);
+    interceptorService.registerInterceptor(new EmbeddedEmailBodyInterceptor());
 
     /*
      * Add some logging for each request
@@ -257,7 +259,6 @@ public class JpaRestfulServer extends RestfulServer {
       subscriptionInterceptorLoader.registerInterceptors();
 
       // Subscription debug logging
-      IInterceptorService interceptorService = appCtx.getBean(IInterceptorService.class);
       interceptorService.registerInterceptor(new SubscriptionDebugLogInterceptor());
     }
 

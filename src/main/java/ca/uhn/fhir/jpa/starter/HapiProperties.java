@@ -63,6 +63,7 @@ public class HapiProperties {
   static final String ALLOW_OVERRIDE_DEFAULT_SEARCH_PARAMS = "allow_override_default_search_params";
   static final String EMAIL_FROM = "email.from";
   static final String EMAIL_DEFAULT_SUBJECT = "email.defaultSubject";
+  static final String EMAIL_STARTTLS = "email.startTls";
   private static final String VALIDATE_REQUESTS_ENABLED = "validation.requests.enabled";
   private static final String VALIDATE_RESPONSES_ENABLED = "validation.responses.enabled";
   private static final String FILTER_SEARCH_ENABLED = "filter_search.enabled";
@@ -393,6 +394,8 @@ public class HapiProperties {
   public static String getEmailPassword() {
     return HapiProperties.getProperty("email.password");
   }
+
+  public static boolean getEmailStartTls() { return HapiProperties.getPropertyBoolean("email.startTls", false); }
 
   public static Long getReuseCachedSearchResultsMillis() {
     String value = HapiProperties.getProperty(REUSE_CACHED_SEARCH_RESULTS_MILLIS, "-1");

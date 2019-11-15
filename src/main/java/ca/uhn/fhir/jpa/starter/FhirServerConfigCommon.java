@@ -47,6 +47,7 @@ public class FhirServerConfigCommon {
     private Integer emailPort = HapiProperties.getEmailPort();
     private String emailUsername = HapiProperties.getEmailUsername();
     private String emailPassword = HapiProperties.getEmailPassword();
+    private boolean emailStartTls = HapiProperties.getEmailStartTls();
     @Autowired
     private SubscriptionDeliveryHandlerFactory mySubscriptionDeliveryHandlerFactory;
 
@@ -68,6 +69,10 @@ public class FhirServerConfigCommon {
 
             if (this.emailPassword != null && this.emailPassword.length() > 0) {
                 ourLog.info("Server is configured to use a password for email");
+            }
+
+            if (this.emailStartTls) {
+              ourLog.info("Server is configured to use STARTTLS for email");
             }
         }
 
@@ -180,6 +185,7 @@ public class FhirServerConfigCommon {
             retVal.setSmtpServerPort(this.emailPort);
             retVal.setSmtpServerUsername(this.emailUsername);
             retVal.setSmtpServerPassword(this.emailPassword);
+            retVal.setSmtpServerTls(this.emailStartTls);
 
             Validate.notNull(mySubscriptionDeliveryHandlerFactory, "No subscription delivery handler");
             mySubscriptionDeliveryHandlerFactory.setEmailSender(retVal);
